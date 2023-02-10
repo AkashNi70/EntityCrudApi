@@ -46,7 +46,6 @@ export default function AddCourse() {
                                 <label htmlFor="courseDesc" className="form-label">Course Description</label>
                                 <input type="text" onChange={changeData} className="form-control" id="courseDesc" name='CourseDescription' placeholder='course description'/>
                             </div>
-                            
                             <div className="mb-3">
                                 <label htmlFor="name" className="form-label">Course Status</label>
                                 <select className="form-select" onChange={changeData} id='courseStatus' name='Status'>

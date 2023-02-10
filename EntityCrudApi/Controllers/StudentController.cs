@@ -18,7 +18,7 @@ namespace EntityCrudApi.Controllers
         [HttpGet]
         public IEnumerable<Student> GetStudents()
         {
-            var studentList = _context.Students.Include(x => x.ScMappings.Where(i => i.StudentId == x.Id)).ToList();
+            var studentList = _context.Students.Include(x => x.ScMappings).ToList();
             return studentList;
         }
 

@@ -9,6 +9,7 @@
         public bool Status { get; set; }
         public DateTime Created { get; set; } = DateTime.UtcNow;
         public DateTime Updated { get; set; } = DateTime.UtcNow;
+        public virtual IEnumerable<ScMapping> ScMappings { get; set; }
 
     }
 }
