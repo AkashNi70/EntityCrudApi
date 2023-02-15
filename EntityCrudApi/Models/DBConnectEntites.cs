@@ -11,7 +11,6 @@ namespace EntityCrudApi.Models
 
         public DbSet<Course> Courses { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<ScMapping> ScMappings { get; set; }
 
     }
 }

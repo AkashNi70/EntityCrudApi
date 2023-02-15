@@ -17,7 +17,6 @@ export default function StudentList() {
     useEffect(() => {
         getStudentList()
     }, []);
-    console.log(studentList)
 
   return (
     <div className="container vh-100">
@@ -52,7 +51,13 @@ export default function StudentList() {
                                                     <td>{student.id}</td>
                                                     <td>{student.name}</td>
                                                     <td>{student.phone}</td>
-                                                    <td>{student.scMappings[0].courseId}</td>
+                                                    <td>
+                                                        {
+                                                            student.courses.reduce((acc,course) => {
+                                                                return [...acc,course.courseName];
+                                                            },[]).join(", ")
+                                                        }
+                                                    </td>
                                                     <td>
                                                         {
                                                             student.status === true ? "Active" : "In Active"

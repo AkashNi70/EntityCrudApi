@@ -1,6 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EntityCrudApi.Models;
+using EntityCrudApi.VIewModels;
 
 namespace EntityCrudApi.Controllers
 {
@@ -15,11 +21,11 @@ namespace EntityCrudApi.Controllers
             _context = context;
         }
 
+        // GET: api/Student
         [HttpGet]
-        public IEnumerable<Student> GetStudents()
+        public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
         {
-            var studentList = _context.Students.Include(x => x.ScMappings).ToList();
-            return studentList;
+            return await _context.Students.Include(x => x.Courses).ToListAsync();
         }
 
         // GET: api/Student/5
@@ -37,6 +43,7 @@ namespace EntityCrudApi.Controllers
         }
 
         // PUT: api/Student/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutStudent(int id, Student student)
         {
@@ -67,9 +74,22 @@ namespace EntityCrudApi.Controllers
         }
 
         // POST: api/Student
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Student>> PostStudent(Student student)
+        public async Task<ActionResult<AddStudentModel>> PostStudent(AddStudentModel addStudent)
         {
+            //var courses = _context.Courses.Where(x => x.Id == 1 || x.Id == 3).ToList();
+
+            Student student = new Student() { 
+                Name= addStudent.Name,
+                Email = addStudent.Email,   
+                Phone = addStudent.Phone,
+                FatherName = addStudent.FatherName,
+                FatherPhone = addStudent.FatherPhone,
+                Status= addStudent.Status,
+                //Courses = courses,
+            };
+
             _context.Students.Add(student);
             await _context.SaveChangesAsync();
 
