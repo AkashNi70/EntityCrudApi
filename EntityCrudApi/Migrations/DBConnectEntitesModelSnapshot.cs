@@ -34,7 +34,7 @@ namespace EntityCrudApi.Migrations
 
                     b.HasIndex("StudentsId");
 
-                    b.ToTable("CourseStudent");
+                    b.ToTable("CourseStudent", (string)null);
                 });
 
             modelBuilder.Entity("EntityCrudApi.Models.Course", b =>
@@ -67,7 +67,7 @@ namespace EntityCrudApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("EntityCrudApi.Models.Student", b =>
@@ -109,7 +109,7 @@ namespace EntityCrudApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("CourseStudent", b =>

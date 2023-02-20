@@ -3,8 +3,12 @@ import React, { useEffect, useState } from 'react'
 export default function AddStudent() {
 
     const [courseList, setCourseList] = useState([]);
+    const [student, setStudent] = useState({});
+    //const [courseId, setCourseId] = useState([]);
+    let baseUrl = "https://localhost:7044/api/";
+
     function getCourseList() {
-        let courseUrl = "https://localhost:7044/api/Course";
+        let courseUrl = baseUrl +  "Course";
         fetch(courseUrl)
             .then(res => res.json())
             .then(json => {
@@ -16,40 +20,53 @@ export default function AddStudent() {
         getCourseList()
     }, []);
 
-    const [student, setStudent] = useState({});
-    const [courseId, setCourseId] = useState([]);
-
-    let addUrl = "https://localhost:7044/api/Student";
 
     function changeData(e) {
-        let studentData = {
-            [e.target.name]: e.target.value,
-            coursesId:courseId,
-        };
+        
+        let courseIds = getSelectedCourseId();
+        let studentData = {};
+
+        if (e.target.tagName == "SELECT") {
+            studentData = {
+                [e.target.name]: e.target.value == 1 ? true : false,
+                coursesId: courseIds,
+            };
+        }else{
+            studentData = {
+                [e.target.name]: e.target.value,
+                coursesId: courseIds,
+            };
+        }
+
         setStudent({ ...student, ...studentData })
-
-        console.log(student)
-    }
-    
-    function checkHandler(e){
-        setCourseId([...courseId,...e.target.value]);
-        console.log(courseId)
     }
 
-    
+    function getSelectedCourseId() {
+        let courseIds = [];
+        let checkbox = document.querySelectorAll("input[type='checkbox']:checked");
+        checkbox.forEach(element => courseIds.push(element.value));
+        return courseIds;
+    }
+
+    function checkHandler(e) {
+        let courseIds = getSelectedCourseId();
+        setStudent({ ...student, ...{ coursesId: courseIds } })
+    }
+
+
     function addStudent() {
-        console.log(student)
-        // fetch(addUrl,{
-        //     method : "POST",
-        //     headers: {
-        //     'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(student)
-        // })
-        // .then(res => res.json())
-        // .then(json => {
-        //     console.log(json);
-        // })
+        let addUrl = baseUrl + "student"
+        fetch(addUrl, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(student)
+        })
+            .then(res => res.json())
+            .then(json => {
+                console.log(json);
+            })
     }
 
     return (
@@ -112,6 +129,7 @@ export default function AddStudent() {
                                 <div className="mb-3">
                                     <label htmlFor="Status" className="form-label">Status</label>
                                     <select className="form-select" onChange={changeData} id='Status' name='Status'>
+                                        <option value="">Select Status</option>
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
                                     </select>

@@ -78,7 +78,7 @@ namespace EntityCrudApi.Controllers
         [HttpPost]
         public async Task<ActionResult<AddStudentModel>> PostStudent(AddStudentModel addStudent)
         {
-            //var courses = _context.Courses.Where(x => x.Id == 1 || x.Id == 3).ToList();
+            var courses = _context.Courses.Where(x => addStudent.coursesId.Contains(x.Id)).ToList();
 
             Student student = new Student() { 
                 Name= addStudent.Name,
@@ -87,7 +87,7 @@ namespace EntityCrudApi.Controllers
                 FatherName = addStudent.FatherName,
                 FatherPhone = addStudent.FatherPhone,
                 Status= addStudent.Status,
-                //Courses = courses,
+                Courses = courses,
             };
 
             _context.Students.Add(student);
