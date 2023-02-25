@@ -1,110 +1,99 @@
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom';
 
-export default function AddStudent() {
+export default function EditStudent() {
 
     let baseUrl = "https://localhost:7044/api/";
+    let param = useParams();
+
+    function getStudentById(){
+        let putUrl = baseUrl+`student/${param.id}`;
+        fetch(putUrl, {
+            method: "GET",
+        })
+        .then(res => res.json())
+        .then(json => {
+            setStdName(json.name);
+            setStdPhone(json.phone);
+            setStdEmail(json.email);
+            setFatName(json.fatherName);
+            setFatPhone(json.fatherPhone);
+            setCourses(json.courses);
+            setStatus(json.status);
+        })
+    }
+
+    useEffect(() => {
+        getStudentById();
+    },[]);
+    
     const [courseList, setCourseList] = useState([]);
+
     function getCourseList() {
         let courseUrl =  baseUrl +"Course";
         fetch(courseUrl)
             .then(res => res.json())
             .then(json => {
                 setCourseList(json)
-            })
+            });
     }
 
     useEffect(() => {
         getCourseList()
     }, []);
 
-    const [student, setStudent] = useState({});
-
-    function changeData(e) {
-        
-        let courseIds = getSelectedCourseId();
-        let studentData = {};
-
-        if (e.target.tagName == "SELECT") {
-            studentData = {
-                [e.target.name]: e.target.value == 1 ? true : false,
-                coursesId: courseIds,
-            };
-        }else{
-            studentData = {
-                [e.target.name]: e.target.value,
-                coursesId: courseIds,
-            };
-        }
-
-        setStudent({ ...student, ...studentData })
-    }
-
-    function getSelectedCourseId() {
-        let courseIds = [];
-        let checkbox = document.querySelectorAll("input[type='checkbox']:checked");
-        checkbox.forEach(element => courseIds.push(element.value));
-        return courseIds;
-    }
-
-    function checkHandler(e) {
-        let courseIds = getSelectedCourseId();
-        setStudent({ ...student, ...{ coursesId: courseIds } })
-    }
+    const[stdName, setStdName] = useState('');
+    const[stdPhone, setStdPhone] = useState('');
+    const[stdEmail, setStdEmail] = useState('');
+    const[fatName, setFatName] = useState('');
+    const[fatPhone, setFatPhone] = useState('');
+    const[courses, setCourses] = useState([]);
+    const[status, setStatus] = useState('');
 
 
-    function addStudent() {
-        let addUrl = baseUrl + "student"
-        fetch(addUrl, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(student)
-        })
-        .then(res => res.json())
-        .then(json => {
-            console.log(json);
-        })
-    }
-
-    return (
-        <div className="container vh-100">
+  return (
+    <div className="container vh-100">
             <div className="row d-flex justify-content-center align-items-center h-100">
                 <div className="col-md-6">
                     <div className="card">
                         <div className="card-body">
-                            <h2 className="text-center mb-4 text-uppercase fw-bold"> Add Student </h2>
+                            <h2 className="text-center mb-4 text-uppercase fw-bold"> Edit Student </h2>
                             <form>
                                 <div className="row">
                                     <div className="col-md-6">
                                         <div className="mb-3">
                                             <label htmlFor="name" className="form-label">Student Name</label>
-                                            <input type="text" onChange={changeData} className="form-control" id="name" name='Name' placeholder='student name' />
+                                            <input type="text" className="form-control" id="name" name='Name' 
+                                            onChange={(e) => {setStdName(e.target.value)}} value={stdName} placeholder='student name' />
                                         </div>
                                     </div>
                                     <div className="col-md-6">
                                         <div className="mb-3">
                                             <label htmlFor="phone" className="form-label">Student Phone</label>
-                                            <input type="text" onChange={changeData} className="form-control" id="phone" name='Phone' placeholder='student description' />
+                                            <input type="text" className="form-control" id="phone" name='Phone' 
+                                            onChange={(e) => {setStdPhone(e.target.value)}} value={stdPhone}  placeholder='student description' />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="email" className="form-label">Student Email</label>
-                                    <input type="text" onChange={changeData} className="form-control" id="email" name='Email' placeholder='student price' />
+                                    <input type="text" className="form-control" id="email" name='Email' 
+                                            onChange={(e) => {setStdEmail(e.target.value)}} value={stdEmail}  placeholder='student price' />
                                 </div>
 
                                 <div className="row">
                                     <div className="col-md-6">
                                         <div className="mb-3">
                                             <label htmlFor="FatherName" className="form-label">Father Name</label>
-                                            <input type="text" onChange={changeData} className="form-control" id="FatherName" name='FatherName' placeholder='student description' />
+                                            <input type="text" className="form-control" id="FatherName" name='FatherName' 
+                                            onChange={(e) => {setFatName(e.target.value)}} value={fatName}  placeholder='student description' />
                                         </div>
                                     </div>
                                     <div className="col-md-6">
                                         <div className="mb-3">
                                             <label htmlFor="FatherPhone" className="form-label">Father Phone</label>
-                                            <input type="text" onChange={changeData} className="form-control" id="FatherPhone" name='FatherPhone' placeholder='student description' />
+                                            <input type="text" className="form-control" id="FatherPhone" name='FatherPhone' 
+                                            onChange={(e) => {setFatPhone(e.target.value)}} value={fatPhone}  placeholder='student description' />
                                         </div>
                                     </div>
                                 </div>
@@ -116,7 +105,7 @@ export default function AddStudent() {
                                                 courseList.map((course) => {
                                                     return (
                                                         <label className="form-check-label checkbox-inline me-2" key={course.id}>
-                                                            <input onChange={checkHandler} className="form-check-input me-2" id='courseId' name='courseId' type="checkbox" value={course.id} />{course.courseName}
+                                                            <input className="form-check-input me-2" id='courseId' name='courseId' type="checkbox" value={course.id} />{course.courseName}
                                                         </label>
                                                     )
                                                 })
@@ -126,13 +115,13 @@ export default function AddStudent() {
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="Status" className="form-label">Status</label>
-                                    <select className="form-select" onChange={changeData} id='Status' name='Status'>
+                                    <select className="form-select" id='Status' value={status} name='Status' onChange={(e) => {setStatus(e.target.value)}}>
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
                                     </select>
                                 </div>
                                 <div className="d-grid my-3">
-                                    <button type="button" onClick={addStudent} className="btn btn-block btn-primary">Submit</button>
+                                    <button type="button" className="btn btn-block btn-primary">Update</button>
                                 </div>
                             </form>
                         </div>
@@ -140,5 +129,5 @@ export default function AddStudent() {
                 </div>
             </div>
         </div>
-    )
+  )
 }

@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 
 export default function StudentList() {
+    let baseUrl = "https://localhost:7044/api/";
 
     const [studentList, setStudentList] = useState([]);    
 
     function getStudentList() { 
-        let studentUrl = "https://localhost:7044/api/Student";
+        let studentUrl =  baseUrl + "Student";
         fetch(studentUrl)
         .then(res => res.json())
         .then(json => {
@@ -17,6 +18,17 @@ export default function StudentList() {
     useEffect(() => {
         getStudentList()
     }, []);
+
+    function deleteStudent(id){
+        let deleteUrl = baseUrl+`student/${id}`;
+        fetch(deleteUrl, {
+            method: "DELETE",
+        })
+        .then(res => res.json())
+        .then(json => {
+            console.log(json)
+        })
+    }
 
   return (
     <div className="container vh-100">
@@ -66,8 +78,8 @@ export default function StudentList() {
                                                     <td>{student.created}</td>
                                                     <td>{student.updated}</td>
                                                     <td>
-                                                        <Link to="#" className='btn btn-info text-white me-2'><i className="material-icons">&#xE254;</i></Link>
-                                                        <Link to="" className='btn btn-danger text-white me-2'><i className="material-icons">&#xE872;</i></Link>
+                                                        <Link to={`/edit-student/${student.id}`} className='btn btn-info text-white me-2'><i className="material-icons">&#xE254;</i></Link>
+                                                        <button type='button' onClick={()=> {deleteStudent(student.id)}} className='btn btn-danger text-white me-2'><i className="material-icons">&#xE872;</i></button>
                                                     </td>
                                                 </tr>
                                             )
