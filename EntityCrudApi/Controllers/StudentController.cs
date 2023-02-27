@@ -30,7 +30,7 @@ namespace EntityCrudApi.Controllers
 
         // GET: api/Student/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Student>> GetStudent(int id)
+        public async Task<ActionResult<UpdateStudentModel>> GetStudent(int id)
         {
             var student = await _context.Students.Include(x => x.Courses).FirstOrDefaultAsync(i => i.Id == id);
 
@@ -39,7 +39,18 @@ namespace EntityCrudApi.Controllers
                 return NotFound();
             }
 
-            return student;
+            var pageModel = new UpdateStudentModel() { 
+                Id = student.Id,
+                Name = student.Name,
+                Email = student.Email,
+                FatherName = student.FatherName,
+                FatherPhone = student.FatherPhone,
+                Status = student.Status,
+                coursesId = student.Courses.Select(x => x.Id).ToArray(),
+                Courses = _context.Courses.ToList()
+            };
+
+            return pageModel;
         }
 
         // PUT: api/Student/5
